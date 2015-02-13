@@ -5,6 +5,10 @@ var gulp = require('gulp');
 var gutil = require('gulp-util');
 var $ = require('gulp-load-plugins')();
 
+var browserify = require('browserify');
+var source = require("vinyl-source-stream");
+var reactify = require('reactify');
+
 gulp.task('styles', function () {
   return gulp.src('app/styles/main.scss')
     .pipe($.plumber())
@@ -17,7 +21,15 @@ gulp.task('styles', function () {
 });
 
 gulp.task('scripts', function() {
+  var b = browserify({
+    extensions: ['.jsx']
+  });
+  b.transform(reactify, {harmony: true})
+  b.add('./app/scripts/main.jsx')
 
+  return b.bundle()
+    .pipe(source('bundle.js'))
+    .pipe(gulp.dest('./app/scripts'));
 });
 
 gulp.task('jshint', function () {
@@ -117,7 +129,7 @@ gulp.task('watch', ['connect'], function () {
 
   gulp.watch('app/styles/**/*.scss', ['styles']);
   gulp.watch('bower.json', ['wiredep']);
-  gulp.watch('app/scripts/**/*.js', ['scripts']);
+  gulp.watch('app/scripts/**/*.jsx', ['scripts']);
 });
 
 gulp.task('build', ['jshint', 'html', 'images', 'fonts', 'extras'], function () {

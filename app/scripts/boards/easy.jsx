@@ -10,6 +10,14 @@ var solvedBoard = [
   '345286179'.split('')
 ]
 
-module.exports = {
-  solved: solvedBoard
-}
+var React = require('react');
+
+var EasyBoard = React.createClass({
+  render() {
+    return (
+      <p>Easy Sudoku</p>
+    );
+  }
+});
+
+module.exports = EasyBoard
